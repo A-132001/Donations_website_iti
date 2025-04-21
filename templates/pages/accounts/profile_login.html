@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        background-color: #f5f5f5;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+        overflow: hidden;
+    }
+
+    .auth-header {
+        background:rgb(80, 8, 102);
+        padding: 30px 20px;
+        text-align: center;
+        color: white;
+    }
+
+    .auth-header h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .auth-body {
+        padding: 30px;
+    }
+
+    .auth-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .auth-form input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .auth-form input:focus {
+        border-color:rgb(104, 4, 96);
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+        outline: none;
+    }
+
+    .auth-form input[type="submit"] {
+        background:rgb(76, 8, 90);
+        color: white;
+        border: none;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .auth-form input[type="submit"]:hover {
+        background:rgb(93, 5, 134);
+    }
+
+    .auth-footer {
+        text-align: center;
+        padding: 20px;
+        border-top: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    .auth-footer a {
+        color:rgb(69, 2, 75);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header" style="background:rgb(186, 11, 202);">
+            <h2>Login</h2>
+        </div>
+
+        <div class="auth-body">
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
+                </div>
+
+                {% if error_message %}
+                <div class="error-message">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+        </div>
+ <div class="forgot-password-link" style="margin: 15px 0;">
+
+<a href="{% url 'account_reset_password' %}">Do You Forget Password ?</a>
+    </div>
+        <div class="auth-footer">
+            Don't have an account? <a href="{% url 'register' %}">Create a new account</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-purple-600 to-indigo-600 py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Empower Change Through Giving</h1>
+      <p class="text-xl text-purple-100 max-w-3xl mx-auto mb-8">
+        Discover and support meaningful causes that align with your values. Every contribution makes a difference.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <form method="get" class="relative w-full max-w-xl">
+          <input type="text" name="q" placeholder="Search campaigns..."
+            class="w-full pl-12 pr-6 py-4 rounded-full focus:ring-2 focus:ring-white focus:border-transparent shadow-lg"
+            value="{{ request.GET.q }}" />
+          <i class="fas fa-search absolute left-5 top-5 text-purple-400"></i>
+          <button type="submit"
+            class="absolute right-2 top-2 bg-purple-700 hover:bg-purple-800 text-white p-2 rounded-full">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+        {% if user.is_authenticated %}
+        <a href="{% url 'campaigns:create' %}"
+          class="flex-shrink-0 bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 rounded-full shadow-lg transition-all font-semibold flex items-center justify-center whitespace-nowrap">
+          <i class="fas fa-plus-circle mr-2 text-lg"></i> Start Campaign
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Filter Chips -->
+    <div class="mb-10">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="font-medium text-gray-700 hidden sm:block">Filter by status:</span>
+        <div class="flex flex-wrap gap-2">
+          <!-- Status Filters -->
+          <a href="?{% if request.GET.q %}q={{ request.GET.q }}{% endif %}{% if request.GET.show_mine == 'true' %}&show_mine=true{% endif %}"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-all {% if not request.GET.status or request.GET.status == 'all' %}bg-purple-600 text-white shadow-md{% else %}bg-white text-gray-700 hover:bg-gray-100 shadow-sm{% endif %}">
+            All Statuses
+          </a>
+
+          {% for value, display in status_choices %}
+          <a href="?status={{ value }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.show_mine == 'true' %}&show_mine=true{% endif %}"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-all {% if request.GET.status == value %}bg-purple-600 text-white shadow-md{% else %}bg-white text-gray-700 hover:bg-gray-100 shadow-sm{% endif %}">
+            {{ display }}
+          </a>
+          {% endfor %}
+
+          <!-- Toggleable My Campaigns button -->
+          <a href="?{% if request.GET.q %}q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if not request.GET.show_mine or request.GET.show_mine != 'true' %}&show_mine=true{% endif %}"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-all {% if request.GET.show_mine == 'true' %}bg-purple-600 text-white shadow-md{% else %}bg-white text-gray-700 hover:bg-gray-100 shadow-sm{% endif %}">
+            My Campaigns
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campaign Grid -->
+    {% if campaigns %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for campaign in campaigns %}
+      <div
+        class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
+        <!-- Campaign Image -->
+        <div class="relative h-56 overflow-hidden">
+          <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}"
+            class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy" />
+          <!-- Status Badge -->
+          <div class="absolute bottom-4 left-4">
+            <span
+              class="px-3 py-1 rounded-full text-xs font-semibold shadow-md {% if campaign.status == 'ongoing' %}bg-green-500 text-white {% elif campaign.status == 'completed' %}bg-blue-500 text-white {% else %}bg-red-500 text-white{% endif %}">
+              {{ campaign.get_status_display }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Campaign Content -->
+        <div class="p-6 flex flex-col flex-grow">
+          <div class="flex-grow">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-xl font-bold text-gray-800 hover:text-purple-600 transition">
+                <a href="{% url 'campaigns:detail' campaign.pk %}">
+                  {{ campaign.title|truncatechars:50 }}
+                </a>
+              </h2>
+              {% if request.user == campaign.owner %}
+              <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">Your Campaign</span>
+              {% endif %}
+            </div>
+            <p class="text-gray-600 mb-4 text-sm line-clamp-3">
+              {{ campaign.description }}
+            </p>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mb-5">
+            <div class="flex justify-between text-xs text-gray-600 mb-2">
+              <span>Raised: ${{ campaign.current_amount|floatformat:2 }}</span>
+              <span>Goal: ${{ campaign.target_amount|floatformat:2 }}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+              <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-2.5 rounded-full"
+                style="width: {% widthratio campaign.current_amount campaign.target_amount 100 %}%"></div>
+            </div>
+            <div class="text-right text-sm font-medium text-purple-600">
+              {% widthratio campaign.current_amount campaign.target_amount 100 %}% funded
+            </div>
+          </div>
+
+          <!-- Metadata -->
+          <div class="flex items-center justify-between text-sm text-gray-500 mt-auto pt-4 border-t border-gray-100">
+            <div class="flex items-center">
+              <div class="relative mr-2">
+                <img src="{{ campaign.owner.profile.profile_picture.url }}" alt="{{ campaign.owner.username }}"
+                  class="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm" />
+                {% if campaign.owner.profile.verified %}
+                <span class="absolute -bottom-1 -right-1 bg-blue-500 text-white p-0.5 rounded-full text-xs">
+                  <i class="fas fa-check"></i>
+                </span>
+                {% endif %}
+              </div>
+              <span>{{ campaign.owner.username }}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="far fa-clock mr-1.5 text-gray-400"></i>
+              <span>{{ campaign.created_at|timesince }} ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="px-6 pb-6">
+          <a href="{% url 'campaigns:detail' campaign.pk %}"
+            class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
+            Support This Cause
+          </a>
+          {% if request.user == campaign.owner %}
+          <div class="grid grid-cols-2 gap-3 mt-3">
+            <a href="{% url 'campaigns:update' campaign.pk %}"
+              class="text-center bg-white hover:bg-gray-50 text-purple-600 border border-purple-600 font-medium py-2 px-4 rounded-lg transition-all">
+              Edit
+            </a>
+            <a href="{% url 'campaigns:delete' campaign.pk %}"
+              class="text-center bg-white hover:bg-gray-50 text-red-600 border border-red-600 font-medium py-2 px-4 rounded-lg transition-all">
+              Delete
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+      <div class="max-w-md mx-auto">
+        <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="fas fa-hand-holding-heart text-4xl text-purple-500"></i>
+        </div>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-3">
+          {% if request.GET.q %}No results found{% else %}No active campaigns{% endif %}
+        </h3>
+        <p class="text-gray-600 mb-6">
+          {% if request.GET.q %}
+          We couldn't find any campaigns matching "{{ request.GET.q }}". Try different keywords.
+          {% else %}
+          There are currently no campaigns available. Be the first to start one!
+          {% endif %}
+        </p>
+        {% if not user.is_authenticated %}
+        <div class="space-y-3">
+          <a href="{% url 'accounts:register' %}"
+            class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg shadow-lg transition-all font-medium">
+            Join Our Community
+          </a>
+          <p class="text-sm text-gray-500">
+            Already have an account? <a href="{% url 'accounts:login' %}" class="text-purple-600 hover:underline">Sign
+              in</a>
+          </p>
+        </div>
+        {% else %}
+        <a href="{% url 'campaigns:create' %}"
+          class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg shadow-lg transition-all font-medium">
+          Start Your Campaign
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="mt-16 flex justify-center">
+      <nav class="flex items-center space-x-2">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+          class="px-5 py-2.5 border rounded-lg hover:bg-purple-50 transition flex items-center">
+          <i class="fas fa-chevron-left mr-2"></i> Previous
+        </a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <span class="px-5 py-2.5 border border-purple-600 bg-purple-600 text-white rounded-lg">
+          {{ num }}
+        </span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a
+          href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+          class="px-5 py-2.5 border rounded-lg hover:bg-purple-50 transition">
+          {{ num }}
+          </a>
+          {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+            class="px-5 py-2.5 border rounded-lg hover:bg-purple-50 transition flex items-center">
+            Next <i class="fas fa-chevron-right ml-2"></i>
+          </a>
+          {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="donate-section">
+        <h2>Donate to Campaign</h2>
+        <form action="{% url 'donate' project.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="donation-amount">Donation Amount</label>
+                <input type="number" id="donation-amount" name="donation_amount" required>
+            </div>
+            <button type="submit" class="submit-btn">Donate Now</button>
+        </form>
+    </section>
+{% endblock %}

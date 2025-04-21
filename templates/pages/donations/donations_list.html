@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Donations List</h2>
+<ul>
+    {% for donation in donations %}
+    <li>{{ donation.user }} donated {{ donation.amount }} EGP to {{ donation.project.title }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

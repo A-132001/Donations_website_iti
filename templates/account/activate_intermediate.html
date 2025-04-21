@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Activation</title>
+</head>
+<body>
+    <form method="post" action="{% url 'activate' %}" id="auto-submit">
+        {% csrf_token %}
+        <input type="hidden" name="uidb64" value="{{ uidb64 }}">
+        <input type="hidden" name="token" value="{{ token }}">
+    </form>
+
+    <script>
+        // Auto-submit form on page load
+        document.getElementById('auto-submit').submit();
+    </script>
+</body>
+</html>

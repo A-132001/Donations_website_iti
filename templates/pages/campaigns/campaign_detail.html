@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mx-auto p-6">
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <img
+      src="{{ campaign.image.url }}"
+      alt="{{ campaign.title }}"
+      class="w-full h-64 object-cover rounded"
+    />
+    <h1 class="text-3xl font-bold mt-4">{{ campaign.title }}</h1>
+    <p class="text-gray-700">{{ campaign.description }}</p>
+    <p class="text-green-600 font-bold mt-2">
+      Target: ${{ campaign.target_amount }}
+    </p>
+    <p class="text-blue-600">Raised: ${{ campaign.current_amount }}</p>
+    <a
+      href="{% url 'campaigns:campaign_list' %}"
+      class="text-blue-500 hover:underline mt-4 block"
+      >Back to Campaigns</a
+    >
+  </div>
+</div>
+{% endblock %}

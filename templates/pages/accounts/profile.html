@@ -1,0 +1,425 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<<<<<<< HEAD
+<!-- Hero Section -->
+<section
+  class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white py-20"
+>
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+    <div class="md:w-1/2 mb-10 md:mb-0">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
+        Empower Change Through Collective Giving
+      </h1>
+      <p class="text-xl mb-8">
+        Join our community to support meaningful causes or launch your own
+        campaign to make a difference.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a
+          href="#"
+          class="bg-white text-purple-700 hover:bg-purple-100 px-6 py-3 rounded-full text-center font-semibold transition"
+        >
+          Explore Campaigns
+        </a>
+        {% if user.is_authenticated %}
+        <a
+          href="#"
+          class="bg-transparent border-2 border-white hover:bg-white hover:text-purple-700 px-6 py-3 rounded-full text-center font-semibold transition"
+        >
+          Start Your Campaign
+        </a>
+        {% else %}
+        <a
+          href="#"
+          class="bg-transparent border-2 border-white hover:bg-white hover:text-purple-700 px-6 py-3 rounded-full text-center font-semibold transition"
+        >
+          Join Our Community
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="md:w-1/2">
+      <img src="#" alt="Community helping each other" class="w-full h-auto" />
+    </div>
+  </div>
+</section>
+
+<!-- Featured Campaigns -->
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">Featured Campaigns</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {% for campaign in featured_campaigns %}
+      <div
+        class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      >
+        <img
+          src="{{ campaign.image.url }}"
+          alt="{{ campaign.title }}"
+          class="w-full h-48 object-cover"
+        />
+        <div class="p-6">
+          <h3 class="text-xl font-bold mb-2">{{ campaign.title }}</h3>
+          <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div
+              class="bg-purple-600 h-2 rounded-full"
+              style="width: {% widthratio campaign.current_amount campaign.target_amount 100 %}%"
+            ></div>
+          </div>
+          <a
+            href="{% url 'campaigns:campaign_detail' campaign.pk %}"
+            class="text-purple-600 font-medium hover:underline"
+            >Learn More →</a
+          >
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-10">
+      <a
+        href="#"
+        class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-medium transition"
+      >
+        View All Campaigns
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center p-6">
+        <div
+          class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <i class="fas fa-lightbulb text-3xl text-purple-600"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">1. Create</h3>
+        <p>
+          Start your campaign in minutes. Share your story and set a funding
+          goal.
+        </p>
+      </div>
+      <div class="text-center p-6">
+        <div
+          class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <i class="fas fa-share-alt text-3xl text-purple-600"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">2. Share</h3>
+        <p>
+          Spread the word through social media and email to reach supporters.
+        </p>
+      </div>
+      <div class="text-center p-6">
+        <div
+          class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <i class="fas fa-hand-holding-heart text-3xl text-purple-600"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">3. Receive</h3>
+        <p>Collect donations and make your project a reality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Platform -->
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+    <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+      <h2 class="text-3xl font-bold mb-6">About HopeFund</h2>
+      <p class="mb-4">
+        HopeFund is a crowdfunding platform dedicated to connecting passionate
+        individuals with communities that want to support meaningful causes.
+      </p>
+      <p class="mb-4">
+        We believe everyone should have the opportunity to bring their ideas to
+        life and make a positive impact in the world.
+      </p>
+      <p>
+        Our platform provides the tools and support needed to turn dreams into
+        reality through the power of collective giving.
+      </p>
+    </div>
+    <div class="md:w-1/2">
+      <img
+        src="{% static 'images/about-illustration.svg' %}"
+        alt="About HopeFund"
+        class="w-full h-auto rounded-lg shadow-md"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- Developers Team -->
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="text-center">
+        <img
+          src="{% static 'images/team1.jpg' %}"
+          alt="Team Member"
+          class="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg"
+        />
+        <h3 class="text-xl font-bold">Alex Johnson</h3>
+        <p class="text-purple-600 mb-2">Founder & CEO</p>
+        <p class="text-sm text-gray-600">
+          Passionate about social impact and technology
+        </p>
+      </div>
+      <div class="text-center">
+        <img
+          src="{% static 'images/team2.jpg' %}"
+          alt="Team Member"
+          class="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg"
+        />
+        <h3 class="text-xl font-bold">Sarah Williams</h3>
+        <p class="text-purple-600 mb-2">Lead Developer</p>
+        <p class="text-sm text-gray-600">
+          Builds the platform with care and precision
+        </p>
+      </div>
+      <div class="text-center">
+        <img
+          src="{% static 'images/team3.jpg' %}"
+          alt="Team Member"
+          class="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg"
+        />
+        <h3 class="text-xl font-bold">Michael Chen</h3>
+        <p class="text-purple-600 mb-2">UX Designer</p>
+        <p class="text-sm text-gray-600">
+          Creates intuitive and beautiful experiences
+        </p>
+      </div>
+      <div class="text-center">
+        <img
+          src="{% static 'images/team4.jpg' %}"
+          alt="Team Member"
+          class="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg"
+        />
+        <h3 class="text-xl font-bold">David Kim</h3>
+        <p class="text-purple-600 mb-2">Community Manager</p>
+        <p class="text-sm text-gray-600">Connects campaigns with supporters</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-16 bg-purple-700 text-white">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">Success Stories</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-purple-800 p-8 rounded-lg">
+        <div class="flex items-center mb-4">
+          <img
+            src="{% static 'images/testimonial1.jpg' %}"
+            alt="Testimonial"
+            class="w-12 h-12 rounded-full mr-4"
+          />
+          <div>
+            <h4 class="font-bold">Emma Rodriguez</h4>
+            <p class="text-purple-300">Education Campaign Creator</p>
+          </div>
+        </div>
+        <p>
+          "Thanks to HopeFund, we were able to build a new classroom for our
+          community school. The platform made it easy to connect with supporters
+          who cared about our cause."
+        </p>
+      </div>
+      <div class="bg-purple-800 p-8 rounded-lg">
+        <div class="flex items-center mb-4">
+          <img
+            src="{% static 'images/testimonial2.jpg' %}"
+            alt="Testimonial"
+            class="w-12 h-12 rounded-full mr-4"
+          />
+          <div>
+            <h4 class="font-bold">James Wilson</h4>
+            <p class="text-purple-300">Environmental Project</p>
+          </div>
+        </div>
+        <p>
+          "Our clean water initiative reached 150% of its funding goal. The
+          HopeFund team provided incredible support throughout our campaign."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-16 bg-gray-900 text-white text-center">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-6">Ready to Make a Difference?</h2>
+    <p class="text-xl mb-8 max-w-2xl mx-auto">
+      Join thousands of people who are changing lives through collective giving.
+    </p>
+    {% comment %} <a
+      href="{% if user.is_authenticated %}{% else %}{% url 'accounts:register' %}{% endif %}"
+      class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold inline-block transition"
+    > {% endcomment %}
+    <a
+      href="{% if user.is_authenticated %}{% else %}{% url 'campaigns:campaign_list' %}{% endif %}"
+      class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold inline-block transition"
+    >
+      Get Started Today
+    </a>
+  </div>
+</section>
+=======
+{% block content %}
+    <h1>{{ profile.user.username }}'s Profile</h1>
+<p>First Name: {{ profile.first_name }}</p>
+<p>Last Name: {{ profile.last_name }}</p>
+<p>Mobile Phone: {{ profile.mobile_phone }}</p>
+<p>Birth Date: {{ profile.birth_date }}</p>
+<p>Facebook: <a href="{{ profile.facebook_link }}">{{ profile.facebook_link }}</a></p>
+<p>Country: {{ profile.country }}</p>
+{% if profile.profile_picture %}
+    <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+{% else %}
+    <img src="/static/default-profile.png" alt="Default Profile Picture">
+{% endif %}
+
+<h2>Your Projects</h2>
+<ul>
+    {% for project in projects %}
+    <li>{{ project.title }} - ${{ project.current_amount }} raised</li>
+    {% endfor %}
+</ul>
+
+<h2>Your Donations</h2>
+<ul>
+    {% for donation in donations %}
+    <li>${{ donation.amount }} to {{ donation.to_campaign.title }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'edit_profile' %}">Edit Profile</a>
+<a href="{% url 'delete_profile' %}">Delete Account</a>
+
+    <style>
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+            padding-top: 50px;
+            padding-bottom: 50px;
+            background-color: #f5f5f5;
+        }
+
+        .profile-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .profile-box h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .profile-details p {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .profile-actions {
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            display: inline-block;
+            background-color: #6B46C1;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-action:hover {
+            background-color: #2C3E50;
+        }
+
+        .delete {
+            background-color: #e74c3c;
+        }
+
+        .delete:hover {
+            background-color: #c0392b;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .message.warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+    </style>
+>>>>>>> Reem
+{% endblock %}
+

@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white py-20 px-4">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    <div class="md:w-1/2 space-y-6">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+        Empower Change Through <span class="text-purple-300">Collective Giving</span>
+      </h1>
+      <p class="text-xl text-purple-100 max-w-lg">
+        Join our community to support meaningful causes or launch your own campaign to make a real difference in the
+        world.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="{% url 'campaigns:campaign_list' %}"
+          class="bg-white text-purple-700 hover:bg-purple-100 px-8 py-4 rounded-lg text-center font-semibold transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+          Explore Campaigns
+        </a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'campaigns:create' %}"
+          class="bg-transparent border-2 border-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-lg text-center font-semibold transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+          Start Your Campaign
+        </a>
+        {% else %}
+        <a href="{% url 'register' %}"
+          class="bg-transparent border-2 border-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-lg text-center font-semibold transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+          Join Our Community
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="md:w-1/2 relative">
+      <img src="{% static 'images/hero.png' %}" alt="Community helping each other"
+        class="w-full h-[32rem] object-cover rounded-2xl shadow-2xl transform transition-all duration-700 hover:scale-[1.02] hover:shadow-3xl" />
+      <div class="absolute -bottom-6 -left-6 bg-purple-600 p-4 rounded-lg shadow-lg hidden md:block">
+        <div class="flex items-center">
+          <div class="bg-white text-purple-600 p-2 rounded-full mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-lg">$1M+</p>
+            <p class="text-sm text-purple-200">Raised for causes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-12 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-4xl font-bold text-purple-600 mb-2">500+</p>
+        <p class="text-gray-600">Campaigns Funded</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-4xl font-bold text-purple-600 mb-2">25K+</p>
+        <p class="text-gray-600">Community Members</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-4xl font-bold text-purple-600 mb-2">95%</p>
+        <p class="text-gray-600">Success Rate</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-4xl font-bold text-purple-600 mb-2">24/7</p>
+        <p class="text-gray-600">Support Available</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Campaigns -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4 md:mb-0">Featured Campaigns</h2>
+      <a href="{% url 'campaigns:campaign_list' %}?sort=newest"
+        class="flex items-center text-purple-600 hover:text-purple-800 font-medium group">
+        View All Campaigns
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 group-hover:translate-x-1 transition"
+          viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+            clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {% for campaign in latest_campaigns %}
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 group">
+        <a href="{% url 'campaigns:detail' campaign.pk %}">
+          <div class="relative h-48 overflow-hidden">
+            <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold shadow-sm
+              {% if campaign.status == 'active' %}text-green-600{% elif campaign.status == 'completed' %}text-purple-600{% else %}text-gray-600{% endif %}">
+              {{ campaign.get_status_display }}
+            </span>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center mb-3">
+              <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">{{ campaign.category.name }}</span>
+              <span class="text-gray-500 text-sm ml-auto">{{ campaign.created_at|timesince }} ago</span>
+            </div>
+            <h3 class="font-bold text-gray-900 mb-2 line-clamp-2">{{ campaign.title }}</h3>
+
+            <div class="mb-4">
+              <div class="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span>{% widthratio campaign.current_amount campaign.target_amount 100 %}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-purple-600 h-2 rounded-full"
+                  style="width: {% widthratio campaign.current_amount campaign.target_amount 100 %}%"></div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-sm text-gray-500">Raised</p>
+                <p class="font-bold text-purple-600">${{ campaign.current_amount|floatformat:0 }}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-gray-500">Goal</p>
+                <p class="font-bold text-gray-700">${{ campaign.target_amount|floatformat:0 }}</p>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Top Donated Campaigns -->
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold">Latest Campaigns</h2>
+      <a href="{% url 'campaigns:campaign_list' %}?sort=newest"
+        class="text-purple-600 hover:text-purple-800 font-medium">View All →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      {% for campaign in latest_campaigns %}
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+        <a href="{% url 'campaigns:detail' campaign.pk %}">
+          <div class="relative h-40 overflow-hidden">
+            <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            <span
+              class="absolute top-2 right-2 px-2 py-1 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium shadow-sm">
+              {{ campaign.get_status_display }}
+            </span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-gray-900 mb-1 truncate">{{ campaign.title }}</h3>
+            <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
+              <span>{{ campaign.category.name }}</span>
+              <span>{{ campaign.created_at|timesince }} ago</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+              <div class="bg-purple-600 h-1.5 rounded-full"
+                style="width: {% widthratio campaign.current_amount campaign.target_amount 100 %}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-600">
+              <span>{% widthratio campaign.current_amount campaign.target_amount 100 %}% funded</span>
+              <span>${{ campaign.current_amount|floatformat:0 }}/${{ campaign.target_amount|floatformat:0 }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- Latest Campaigns -->
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold">Top Donated Campaigns</h2>
+      <a href="{% url 'campaigns:campaign_list' %}?sort=newest"
+        class="text-purple-600 hover:text-purple-800 font-medium">View All →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      {% for campaign in top_donated_campaigns %}
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+        <a href="{% url 'campaigns:detail' campaign.pk %}">
+          <div class="relative h-40 overflow-hidden">
+            <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            <span
+              class="absolute top-2 right-2 px-2 py-1 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium shadow-sm">
+              {{ campaign.get_status_display }}
+            </span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-gray-900 mb-1 truncate">{{ campaign.title }}</h3>
+            <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
+              <span>{{ campaign.category.name }}</span>
+              <span>{{ campaign.created_at|timesince }} ago</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+              <div class="bg-purple-600 h-1.5 rounded-full"
+                style="width: {% widthratio campaign.current_amount campaign.target_amount 100 %}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-600">
+              <span>{% widthratio campaign.current_amount campaign.target_amount 100 %}% funded</span>
+              <span>${{ campaign.current_amount|floatformat:0 }}/${{ campaign.target_amount|floatformat:0 }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- Completed Campaigns -->
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold">Completed Campaigns</h2>
+      <a href="{% url 'campaigns:campaign_list' %}?sort=newest"
+        class="text-purple-600 hover:text-purple-800 font-medium">View All →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      {% for campaign in completed_campaigns %}
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+        <a href="{% url 'campaigns:detail' campaign.pk %}">
+          <div class="relative h-40 overflow-hidden">
+            <img src="{{ campaign.image.url }}" alt="{{ campaign.title }}"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+            <span
+              class="absolute top-2 right-2 px-2 py-1 bg-white/80 backdrop-blur-sm rounded-full text-xs font-medium shadow-sm">
+              {{ campaign.get_status_display }}
+            </span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-gray-900 mb-1 truncate">{{ campaign.title }}</h3>
+            <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
+              <span>{{ campaign.category.name }}</span>
+              <span>{{ campaign.created_at|timesince }} ago</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+              <div class="bg-purple-600 h-1.5 rounded-full"
+                style="width: {% widthratio campaign.current_amount campaign.target_amount 100 %}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-600">
+              <span>{% widthratio campaign.current_amount campaign.target_amount 100 %}% funded</span>
+              <span>${{ campaign.current_amount|floatformat:0 }}/${{ campaign.target_amount|floatformat:0 }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-16">
+      <span class="inline-block px-3 py-1 text-sm font-semibold text-purple-600 bg-purple-100 rounded-full mb-4">Our
+        Process</span>
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Getting started is simple and takes just a few minutes to
+        create your campaign.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition text-center">
+        <div
+          class="bg-gradient-to-br from-purple-100 to-purple-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3">1. Create</h3>
+        <p class="text-gray-600">
+          Start your campaign in minutes. Share your story, set a funding goal, and add compelling images.
+        </p>
+      </div>
+
+      <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition text-center transform md:-translate-y-4">
+        <div
+          class="bg-gradient-to-br from-purple-100 to-purple-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3">2. Share</h3>
+        <p class="text-gray-600">
+          Spread the word through social media, email, and word of mouth to reach your network of supporters.
+        </p>
+      </div>
+
+      <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition text-center">
+        <div
+          class="bg-gradient-to-br from-purple-100 to-purple-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3">3. Receive</h3>
+        <p class="text-gray-600">
+          Collect donations directly to your account and make your project a reality with our support.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-16 bg-gradient-to-r from-purple-700 to-indigo-800 text-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-16">
+      <span class="inline-block px-3 py-1 text-sm font-semibold text-purple-200 bg-purple-900/30 rounded-full mb-4">Testimonials</span>
+      <h2 class="text-3xl font-bold mb-4">Success Stories</h2>
+      <p class="text-lg text-purple-200 max-w-2xl mx-auto">Hear from people who've made an impact with our platform</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Testimonial 1 -->
+      <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:border-white/30 transition">
+        <div class="flex items-start mb-6">
+          <!-- Avatar placeholder with initials -->
+          <div class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 border-2 border-white text-white font-bold text-xl">
+            ER
+          </div>
+          <div class="ml-4">
+            <h4 class="font-bold text-lg">Emma Rodriguez</h4>
+            <p class="text-purple-200">Education Campaign Creator</p>
+            <div class="flex mt-1 text-yellow-300">
+              {% for i in "12345" %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="text-purple-100 italic relative pl-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white/30 absolute left-0 top-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          "Thanks to HopeFund, we were able to build a new classroom for our community school. The platform made it easy to connect with supporters who cared about our cause."
+        </p>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:border-white/30 transition">
+        <div class="flex items-start mb-6">
+          <!-- Avatar placeholder with initials -->
+          <div class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white text-white font-bold text-xl">
+            JW
+          </div>
+          <div class="ml-4">
+            <h4 class="font-bold text-lg">James Wilson</h4>
+            <p class="text-purple-200">Environmental Project</p>
+            <div class="flex mt-1 text-yellow-300">
+              {% for i in "12345" %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="text-purple-100 italic relative pl-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white/30 absolute left-0 top-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          "Our clean water initiative reached 150% of its funding goal. The HopeFund team provided incredible support throughout our campaign."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-20 bg-gray-900 text-white">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-40 h-40 bg-purple-400 rounded-full opacity-20"></div>
+      <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-400 rounded-full opacity-20"></div>
+
+      <div class="relative z-10">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
+        <p class="text-xl text-purple-100 mb-8">
+          Join thousands of people who are changing lives through collective giving. Whether you want to support causes
+          or start your own, we're here to help.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="{% if user.is_authenticated %}{% url 'campaigns:create' %}{% else %}{% url 'register' %}{% endif %}"
+            class="bg-white text-purple-700 hover:bg-purple-100 px-8 py-4 rounded-lg text-lg font-semibold inline-block transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+            Get Started Today
+          </a>
+          <a href="{% url 'campaigns:campaign_list' %}"
+            class="bg-transparent border-2 border-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-lg text-lg font-semibold inline-block transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+            Browse Campaigns
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

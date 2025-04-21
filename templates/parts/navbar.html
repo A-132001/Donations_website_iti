@@ -1,0 +1,125 @@
+<header class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <!-- Logo with Home Link -->
+      <a href="{% url 'home' %}" class="logo flex items-center space-x-2 hover:opacity-90 transition">
+        <i class="fas fa-hand-holding-heart text-2xl md:text-3xl text-purple-600"></i>
+        <span class="text-lg md:text-xl font-bold text-gray-800">HopeFund</span>
+      </a>
+
+      <!-- Main Navigation -->
+      <div class="hidden md:flex items-center space-x-1 lg:space-x-4">
+        <!-- Campaigns -->
+        <div class="relative group">
+          <a href="{% url 'campaigns:campaign_list' %}"
+            class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition flex items-center">
+            <i class="fas fa-project-diagram mr-2"></i>
+            Campaigns
+          </a>
+          <!-- Dropdown (optional) -->
+          <!-- <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-1 py-1 w-48">
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Browse All</a>
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Top Funded</a>
+            </div> -->
+        </div>
+
+        <!-- Donations -->
+        <a href="{% url 'transaction-create' %}"
+          class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition flex items-center">
+          <i class="fas fa-donate mr-2"></i>
+          Donate Now
+        </a>
+
+        <!-- User Account Section -->
+        {% if user.is_authenticated %}
+        <div class="relative group ml-2">
+          <a href="{% url 'profile' %}"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md bg-purple-50 text-purple-700 hover:bg-purple-100 transition">
+            <i class="fas fa-user-circle"></i>
+            <span class="hidden lg:inline">{{ user.username }}</span>
+          </a>
+          <div class="absolute right-0 hidden group-hover:block bg-white shadow-lg rounded-md mt-1 py-1 w-48 z-50">
+            <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+              <i class="fas fa-user mr-2"></i> Profile
+            </a>
+            <a href="{% url 'campaigns:campaign_list' %}"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+              <i class="fas fa-plus-circle mr-2"></i> Start Campaign
+            </a>
+            <a href="{%url 'user_logout'}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 border-t">
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </a>
+          </div>
+        </div>
+        {% else %}
+        <a href="{% url 'profile_login' %}"
+          class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition">
+          <i class="fas fa-sign-in-alt mr-1"></i>
+          Login
+        </a>
+        <a href="{% url 'register' %}"
+          class="ml-2 px-4 py-2 rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition">
+          <i class="fas fa-user-plus mr-1"></i>
+          Register
+        </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile menu button -->
+      <button class="md:hidden text-gray-500 hover:text-purple-600 focus:outline-none">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu (hidden by default) -->
+  <div class="md:hidden hidden bg-white border-t" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <a href="{% url 'campaigns:campaign_list' %}"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50">
+        <i class="fas fa-project-diagram mr-2"></i> Campaigns
+      </a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'transaction-create' %}"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50">
+        <i class="fas fa-donate mr-2"></i> Donate Now
+      </a>
+      <a href="#"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50">
+        <i class="fas fa-plus-circle mr-2"></i> Start Campaign
+      </a>
+      <a href="#"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50">
+        <i class="fas fa-user-circle mr-2"></i> Profile
+      </a>
+      <a href="{% url 'user_logout' %}"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 border-t">
+        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+      </a>
+      {% else %}
+      <a href="{% url 'profile_login' %}"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50">
+        <i class="fas fa-sign-in-alt mr-2"></i> Login
+      </a>
+      <a href="{% url 'register' %}"
+        class="block px-3 py-2 rounded-md text-base font-medium bg-purple-600 text-white hover:bg-purple-700">
+        <i class="fas fa-user-plus mr-2"></i> Register
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<!-- JavaScript for mobile menu -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mobileMenuButton = document.querySelector(
+      'button[class*="md:hidden"]'
+    );
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    mobileMenuButton.addEventListener("click", function () {
+      mobileMenu.classList.toggle("hidden");
+    });
+  });
+</script>
